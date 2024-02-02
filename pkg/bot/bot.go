@@ -12,17 +12,14 @@ import (
 
 var BotToken string
 
-func checkNilErr(e error) {
-	if e != nil {
-		log.Fatal("Error message")
-	}
-}
-
 func Run() {
 
 	// create a session
 	discord, err := discordgo.New("Bot " + BotToken)
-	checkNilErr(err)
+	if err != nil {
+		log.Fatalf("Bot broken")
+		os.Exit(1)
+	}
 
 	// add a event handler
 	discord.AddHandler(newMessage)

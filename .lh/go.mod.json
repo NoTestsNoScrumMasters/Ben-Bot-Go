@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1706851912568,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1706893832469,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,12 @@\n-module github.com/NoTestsNoScrumMasters/Ben-Bot-Go.git\n+module github.com/NoTestsNoScrumMasters/Ben-Bot-Go\n \n go 1.19\n \n require github.com/bwmarrin/discordgo v0.27.1\n \n require (\n \tgithub.com/gorilla/websocket v1.4.2 // indirect\n+\tgithub.com/sirupsen/logrus v1.9.3\n \tgolang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect\n-\tgolang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect\n+\tgolang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect\n )\n"
                 }
             ],
             "date": 1706851912568,

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1706851644694,
@@ -24,6 +24,14 @@
                 {
                     "date": 1706893601747,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,6 @@\n package main\r\n \r\n-import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n-)\n-\r\n-import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go.git\"\r\n-)\n-\r\n-import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n-)\n\\ No newline at end of file\n+func main() {\r\n+\tbot.BotToken = \"DISCORD TOKEN ID\"\r\n+\tbot.Run() // call the run function of bot/bot.go\r\n+}\r\n"
+                },
+                {
+                    "date": 1706893832532,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,12 @@\n package main\r\n \r\n+import (\r\n+\tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg\"\r\n+\tlog \"github.com/sirupsen/logrus\"\r\n+)\r\n+\r\n func main() {\r\n \tbot.BotToken = \"DISCORD TOKEN ID\"\r\n \tbot.Run() // call the run function of bot/bot.go\r\n+\tlog.Info(\"ShapiroHelperBot started\")\r\n }\r\n"
+                },
+                {
+                    "date": 1706905152096,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,12 @@\n package main\r\n \r\n import (\r\n-\tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg\"\r\n+\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n func main() {\r\n-\tbot.BotToken = \"DISCORD TOKEN ID\"\r\n-\tbot.Run() // call the run function of bot/bot.go\r\n+\tbot.BotToken = \"\" //todo\r\n+\tbot.Run()\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n }\r\n"
                 }
             ],
             "date": 1706851644694,

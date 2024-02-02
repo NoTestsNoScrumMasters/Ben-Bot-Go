@@ -1,6 +1,12 @@
 package main
 
+import (
+	"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot"
+	log "github.com/sirupsen/logrus"
+)
+
 func main() {
-	bot.BotToken = "DISCORD TOKEN ID"
-	bot.Run() // call the run function of bot/bot.go
+	bot.BotToken = "" //todo
+	bot.Run()
+	log.Info("ShapiroHelperBot started")
 }

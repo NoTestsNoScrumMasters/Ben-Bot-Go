@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pkg/bot/bot.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1706905152077,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1706905152077,
+            "name": "Commit-0",
+            "content": "package pkg\r\n\r\nimport (\r\n\t\"fmt\"\r\n\t\"log\"\r\n\t\"os\"\r\n\t\"os/signal\"\r\n\t\"strings\"\r\n\r\n\t\"github.com/bwmarrin/discordgo\"\r\n)\r\n\r\nvar BotToken string\r\n\r\nfunc Run() {\r\n\r\n\t// create a session\r\n\tdiscord, err := discordgo.New(\"Bot \" + BotToken)\r\n\tif err != nil {\r\n\t\tlog.Fatalf(\"Bot broken\")\r\n\t\tos.Exit(1)\r\n\t}\r\n\r\n\t// add a event handler\r\n\tdiscord.AddHandler(newMessage)\r\n\r\n\t// open session\r\n\tdiscord.Open()\r\n\tdefer discord.Close() // close session, after function termination\r\n\r\n\t// keep bot running untill there is NO os interruption (ctrl + C)\r\n\tfmt.Println(\"Bot running....\")\r\n\tc := make(chan os.Signal, 1)\r\n\tsignal.Notify(c, os.Interrupt)\r\n\t<-c\r\n\r\n}\r\n\r\nfunc newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {\r\n\r\n\t/* prevent bot responding to its own message\r\n\tthis is achived by looking into the message author id\r\n\tif message.author.id is same as bot.author.id then just return\r\n\t*/\r\n\tif message.Author.ID == discord.State.User.ID {\r\n\t\treturn\r\n\t}\r\n\r\n\t// respond to user message if it contains `!help` or `!bye`\r\n\tswitch {\r\n\tcase strings.Contains(message.Content, \"!help\"):\r\n\t\tdiscord.ChannelMessageSend(message.ChannelID, \"Hello World😃\")\r\n\tcase strings.Contains(message.Content, \"!bye\"):\r\n\t\tdiscord.ChannelMessageSend(message.ChannelID, \"Good Bye👋\")\r\n\t\t// add more cases if required\r\n\t}\r\n\r\n}\r\n"
+        }
+    ]
+}
