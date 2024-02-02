@@ -1,0 +1,34 @@
+{
+    "sourceFile": "main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1706851644694,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1706851854938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n package main\r\n \r\n import (\r\n-\t\"https://github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n+\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n )\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1706851912555,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,5 @@\n package main\r\n+\r\n+import (\r\n+\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go.git\"\r\n+)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1706851956970,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,5 @@\n package main\r\n+\r\n+import (\r\n+\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n+)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1706893601747,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,6 @@\n package main\r\n \r\n-import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n-)\n-\r\n-import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go.git\"\r\n-)\n-\r\n-import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n-)\n\\ No newline at end of file\n+func main() {\r\n+\tbot.BotToken = \"DISCORD TOKEN ID\"\r\n+\tbot.Run() // call the run function of bot/bot.go\r\n+}\r\n"
+                }
+            ],
+            "date": 1706851644694,
+            "name": "Commit-0",
+            "content": "package main\r\n\r\nimport (\r\n\t\"https://github.com/NoTestsNoScrumMasters/Ben-Bot-Go\"\r\n)"
+        }
+    ]
+}
