@@ -17,6 +17,10 @@
             "environment": [],
             "mountPoints": [],
             "volumesFrom": [],
+            "secrets": [{
+                "name": "environment_variable_name",
+                "valueFrom": "arn:aws:secretsmanager:us-west-2:248197616424:secret:bottoken-RYjh9a"
+              }],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {

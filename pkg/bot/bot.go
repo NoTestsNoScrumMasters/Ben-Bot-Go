@@ -1,21 +1,67 @@
 package bot
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-var BotToken string
+var (
+	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
+	BotToken       = flag.String("token", "", "Bot access token")
+	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
+)
+
+// Utility function to create an embed in response to an interaction
+func create_embed(name string, session *discordgo.Session, interaction *discordgo.InteractionCreate, description string, Fields []*discordgo.MessageEmbedField) {
+	embed := &discordgo.MessageEmbed{
+		Author:      &discordgo.MessageEmbedAuthor{},
+		Color:       0xFFE41E,
+		Description: description,
+
+		Timestamp: time.Now().Format(time.RFC3339), // Discord wants ISO8601; RFC3339 is an extension of ISO8601 and should be completely compatible.
+		Title:     name,
+		Fields:    Fields,
+	}
+
+	// Send the embed as a response to the provided interaction
+	session.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{Type: discordgo.InteractionResponseChannelMessageWithSource, Data: &discordgo.InteractionResponseData{
+		Embeds: []*discordgo.MessageEmbed{embed},
+	}})
+}
+
+// Utility function to create an embed in response to an interaction
+func send_embed(name string, session *discordgo.Session, user string, description string, Fields []*discordgo.MessageEmbedField) {
+	embed := &discordgo.MessageEmbed{
+		Author:      &discordgo.MessageEmbedAuthor{},
+		Color:       0xFFE41E,
+		Description: description,
+
+		Timestamp: time.Now().Format(time.RFC3339), // Discord wants ISO8601; RFC3339 is an extension of ISO8601 and should be completely compatible.
+		Title:     name,
+		Fields:    Fields,
+	}
+
+	// Send the embed as a response to the provided interaction
+	channel, err := session.UserChannelCreate(user)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		session.ChannelMessageSendEmbed(channel.ID, embed)
+	}
+}
 
 func Run() {
 
 	// create a session
-	discord, err := discordgo.New("Bot " + BotToken)
+	discord, err := discordgo.New("Bot " + *BotToken)
 	if err != nil {
 		log.Fatalf("Bot broken")
 		os.Exit(1)

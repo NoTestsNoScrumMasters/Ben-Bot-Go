@@ -1,0 +1,18 @@
+{
+    "sourceFile": "aws-task-definition.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1706942607368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1706942607368,
+            "name": "Commit-0",
+            "content": "{\r\n    \"taskDefinitionArn\": \"arn:aws:ecs:us-west-2:248197616424:task-definition/aws-task-definition:20\",\r\n    \"containerDefinitions\": [\r\n        {\r\n            \"name\": \"stalebot-app\",\r\n            \"image\": \"248197616424.dkr.ecr.us-west-2.amazonaws.com/stalebot-repo:032f7e9a7c0caf2805de41b019a9d4ec82159839\",\r\n            \"cpu\": 512,\r\n            \"memoryReservation\": 1,\r\n            \"portMappings\": [\r\n                {\r\n                    \"containerPort\": 80,\r\n                    \"hostPort\": 80,\r\n                    \"protocol\": \"tcp\"\r\n                }\r\n            ],\r\n            \"essential\": true,\r\n            \"environment\": [],\r\n            \"mountPoints\": [],\r\n            \"volumesFrom\": [],\r\n            \"secrets\": [{\r\n                \"name\": \"environment_variable_name\",\r\n                \"valueFrom\": \"arn:aws:secretsmanager:us-west-2:248197616424:secret:bottoken-RYjh9a\"\r\n              }],\r\n            \"logConfiguration\": {\r\n                \"logDriver\": \"awslogs\",\r\n                \"options\": {\r\n                    \"awslogs-group\": \"/ecs/aws-task-definition\",\r\n                    \"awslogs-region\": \"us-west-2\",\r\n                    \"awslogs-stream-prefix\": \"ecs\"\r\n                }\r\n            }\r\n        }\r\n    ],\r\n    \"family\": \"aws-task-definition\",\r\n    \"executionRoleArn\": \"arn:aws:iam::248197616424:role/ecsTaskExecutionRole\",\r\n    \"networkMode\": \"awsvpc\",\r\n    \"revision\": 20,\r\n    \"volumes\": [],\r\n    \"status\": \"ACTIVE\",\r\n    \"requiresAttributes\": [\r\n        {\r\n            \"name\": \"com.amazonaws.ecs.capability.logging-driver.awslogs\"\r\n        },\r\n        {\r\n            \"name\": \"ecs.capability.execution-role-awslogs\"\r\n        },\r\n        {\r\n            \"name\": \"com.amazonaws.ecs.capability.ecr-auth\"\r\n        },\r\n        {\r\n            \"name\": \"com.amazonaws.ecs.capability.docker-remote-api.1.19\"\r\n        },\r\n        {\r\n            \"name\": \"com.amazonaws.ecs.capability.docker-remote-api.1.21\"\r\n        },\r\n        {\r\n            \"name\": \"ecs.capability.execution-role-ecr-pull\"\r\n        },\r\n        {\r\n            \"name\": \"com.amazonaws.ecs.capability.docker-remote-api.1.18\"\r\n        },\r\n        {\r\n            \"name\": \"ecs.capability.task-eni\"\r\n        }\r\n    ],\r\n    \"placementConstraints\": [],\r\n    \"compatibilities\": [\r\n        \"EC2\",\r\n        \"FARGATE\"\r\n    ],\r\n    \"requiresCompatibilities\": [\r\n        \"FARGATE\"\r\n    ],\r\n    \"cpu\": \"1024\",\r\n    \"memory\": \"2048\",\r\n    \"registeredAt\": \"2023-04-30T21:48:10.992Z\",\r\n    \"registeredBy\": \"arn:aws:iam::248197616424:user/stale\",\r\n    \"tags\": []\r\n}"
+        }
+    ]
+}
