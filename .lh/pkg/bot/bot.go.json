@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1706905152077,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1706906371497,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-package pkg\r\n+package bot\r\n \r\n import (\r\n \t\"fmt\"\r\n \t\"log\"\r\n"
                 }
             ],
             "date": 1706905152077,

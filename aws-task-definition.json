@@ -1,0 +1,75 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-west-2:248197616424:task-definition/aws-task-definition:20",
+    "containerDefinitions": [
+        {
+            "name": "stalebot-app",
+            "image": "248197616424.dkr.ecr.us-west-2.amazonaws.com/stalebot-repo:032f7e9a7c0caf2805de41b019a9d4ec82159839",
+            "cpu": 512,
+            "memoryReservation": 1,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/aws-task-definition",
+                    "awslogs-region": "us-west-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "family": "aws-task-definition",
+    "executionRoleArn": "arn:aws:iam::248197616424:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 20,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "registeredAt": "2023-04-30T21:48:10.992Z",
+    "registeredBy": "arn:aws:iam::248197616424:user/stale",
+    "tags": []
+}

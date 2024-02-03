@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot"
+	bot "github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot"
 	log "github.com/sirupsen/logrus"
 )
 

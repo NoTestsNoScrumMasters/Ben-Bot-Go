@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Dockerfile",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1706941795467,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1706941795467,
+            "name": "Commit-0",
+            "content": "FROM golang:1.17-alpine as build-env\r\n\r\n# environment variables\r\nENV APP_NAME Ben-Bot-Go\r\nENV CMD_PATH main.go\r\n\r\n# create source code directory\r\nCOPY . $GOPATH/src/$APP_NAME\r\nWORKDIR $GOPATH/src/$APP_NAME\r\n\r\n# install dependencies\r\n\r\nRUN go mod download\r\n\r\n# build \r\nRUN CGO_ENABLED=0 go build -v -o /$APP_NAME $GOPATH/src/$APP_NAME/$CMD_PATH\r\n\r\n# Run Stage\r\nFROM alpine:3.14\r\n \r\n# Set environment variable\r\nENV APP_NAME Ben-Bot-Go\r\n \r\n# copy data into image\r\nCOPY --from=build-env /$APP_NAME .\r\n \r\n# listening on port  8080\r\nEXPOSE 8080\r\n\r\n# set argument vars in docker-run command\r\nARG AWS_ACCESS_KEY_ID\r\nARG AWS_SECRET_ACCESS_KEY\r\nARG AWS_DEFAULT_REGION\r\n\r\n# ENV AWS agrument\r\nENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID\r\nENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY\r\nENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION\r\n\r\n# set Discord APP token argument\r\nARG DISCORD_BOT_TOKEN\r\n\r\n# ENV discord argument\r\nENV DISCORD_BOT_TOKEN $DISCORD_BOT_TOKEN\r\n\r\n# Start app\r\nCMD ./$APP_NAME"
+        }
+    ]
+}
