@@ -58,10 +58,50 @@ func send_embed(name string, session *discordgo.Session, user string, descriptio
 	}
 }
 
-func Run() {
+const cmdUsage = "USAGE: /wiki [function/callback]"
+
+type Results struct {
+	Status struct {
+		Total      int `json:"total"`
+		Failed     int `json:"failed"`
+		Successful int `json:"successful"`
+	} `json:"status"`
+	Request struct {
+		Query struct {
+			Query string `json:"query"`
+		} `json:"query"`
+		Size      int `json:"size"`
+		From      int `json:"from"`
+		Highlight struct {
+			Style  interface{} `json:"style"`
+			Fields interface{} `json:"fields"`
+		} `json:"highlight"`
+		Fields           interface{} `json:"fields"`
+		Facets           interface{} `json:"facets"`
+		Explain          bool        `json:"explain"`
+		Sort             []string    `json:"sort"`
+		IncludeLocations bool        `json:"includeLocations"`
+		SearchAfter      interface{} `json:"search_after"`
+		SearchBefore     interface{} `json:"search_before"`
+	} `json:"request"`
+	Hits      []Hit `json:"hits"`
+	TotalHits int   `json:"total"`
+	Took      int64 `json:"took"`
+}
+
+type Hit struct {
+	Url                  string  `json:"url"`
+	Title                string  `json:"title"`
+	Description          string  `json:"desc"`
+	TitleFragments       string  `json:"title_fragment"`
+	DescriptionFragments string  `json:"desc_fragment"`
+	Score                float64 `json:"score"`
+}
+
+func Run(BotToken string) {
 
 	// create a session
-	discord, err := discordgo.New("Bot " + *BotToken)
+	discord, err := discordgo.New("Bot " + BotToken)
 	if err != nil {
 		log.Fatalf("Bot broken")
 		os.Exit(1)

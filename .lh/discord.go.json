@@ -1,0 +1,18 @@
+{
+    "sourceFile": "discord.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1707027919702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1707027919702,
+            "name": "Commit-0",
+            "content": "package discordgo\r\n\r\nimport (\r\n\t\"net/http\"\r\n\t\"runtime\"\r\n\t\"time\"\r\n\r\n\t\"github.com/gorilla/websocket\"\r\n)\r\n\r\n// VERSION of DiscordGo, follows Semantic Versioning. (http://semver.org/)\r\nconst VERSION = \"0.27.1\"\r\n\r\n// New creates a new Discord session with provided token.\r\n// If the token is for a bot, it must be prefixed with \"Bot \"\r\n// \t\te.g. \"Bot ...\"\r\n// Or if it is an OAuth2 token, it must be prefixed with \"Bearer \"\r\n//\t\te.g. \"Bearer ...\"\r\nfunc New(token string) (s *Session, err error) {\r\n\r\n\t// Create an empty Session interface.\r\n\ts = &Session{\r\n\t\tState:                              NewState(),\r\n\t\tRatelimiter:                        NewRatelimiter(),\r\n\t\tStateEnabled:                       true,\r\n\t\tCompress:                           true,\r\n\t\tShouldReconnectOnError:             true,\r\n\t\tShouldReconnectVoiceOnSessionError: true,\r\n\t\tShouldRetryOnRateLimit:             true,\r\n\t\tShardID:                            0,\r\n\t\tShardCount:                         1,\r\n\t\tMaxRestRetries:                     3,\r\n\t\tClient:                             &http.Client{Timeout: (20 * time.Second)},\r\n\t\tDialer:                             websocket.DefaultDialer,\r\n\t\tUserAgent:                          \"DiscordBot (https://github.com/bwmarrin/discordgo, v\" + VERSION + \")\",\r\n\t\tsequence:                           new(int64),\r\n\t\tLastHeartbeatAck:                   time.Now().UTC(),\r\n\t}\r\n\r\n\t// Initialize the Identify Package with defaults\r\n\t// These can be modified prior to calling Open()\r\n\ts.Identify.Compress = true\r\n\ts.Identify.LargeThreshold = 250\r\n\ts.Identify.Properties.OS = runtime.GOOS\r\n\ts.Identify.Properties.Browser = \"DiscordGo v\" + VERSION\r\n\ts.Identify.Intents = IntentsAllWithoutPrivileged\r\n\ts.Identify.Token = token\r\n\ts.Token = token\r\n\r\n\treturn\r\n}"
+        }
+    ]
+}

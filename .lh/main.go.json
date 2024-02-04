@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 7,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1706851644694,
@@ -36,6 +36,14 @@
                 {
                     "date": 1706905753553,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n package main\r\n \r\n import (\r\n-\t\"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n+\tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n func main() {\r\n"
+                },
+                {
+                    "date": 1707027696708,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,17 @@\n package main\r\n \r\n import (\r\n+\t\"os\"\r\n+\r\n \tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n+\t\"github.com/joho/godotenv\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n func main() {\r\n-\tbot.BotToken = \"\" //todo\r\n+\tgodotenv.Load(\".env\")\r\n+\ttoken := os.Getenv(\"TOKEN\")\r\n+\tbot.BotToken = token\r\n \tbot.Run()\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n }\r\n"
+                },
+                {
+                    "date": 1707028176367,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,8 +10,7 @@\n \r\n func main() {\r\n \tgodotenv.Load(\".env\")\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n-\tbot.BotToken = token\r\n-\tbot.Run()\r\n+\tbot.Run(token)\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n }\r\n"
                 }
             ],
             "date": 1706851644694,
