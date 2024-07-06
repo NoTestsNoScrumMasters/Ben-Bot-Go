@@ -3,14 +3,19 @@ package main
 import (
 	"os"
 
-	bot "github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot"
 	"github.com/joho/godotenv"
+
+	"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot"
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	godotenv.Load(".env")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	token := os.Getenv("TOKEN")
-	bot.Run(token)
-	log.Info("ShapiroHelperBot started")
+	bot.Run(token, "1017181081721639002")
+	log.Info("ShapiroHelperBot started by ")
+
 }

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 14,
             "patches": [
                 {
                     "date": 1706851644694,
@@ -44,6 +44,26 @@
                 {
                     "date": 1707028176367,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,8 +10,7 @@\n \r\n func main() {\r\n \tgodotenv.Load(\".env\")\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n-\tbot.BotToken = token\r\n-\tbot.Run()\r\n+\tbot.Run(token)\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n }\r\n"
+                },
+                {
+                    "date": 1718941624127,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,16 +1,18 @@\n package main\r\n \r\n import (\r\n+\t\"flag\"\r\n \t\"os\"\r\n-\r\n \tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n-\t\"github.com/joho/godotenv\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n+\r\n func main() {\r\n-\tgodotenv.Load(\".env\")\r\n+\tflag.Parse()\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n-\tbot.Run(token)\r\n+\tGuildId := os.Getenv(\"GUILD\")\r\n+\tbot.Run(token, GuildID)\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n+\t\r\n }\r\n"
+                },
+                {
+                    "date": 1718942131071,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,17 +2,17 @@\n \r\n import (\r\n \t\"flag\"\r\n \t\"os\"\r\n+\r\n \tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n-\r\n func main() {\r\n \tflag.Parse()\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n \tGuildId := os.Getenv(\"GUILD\")\r\n \tbot.Run(token, GuildID)\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n-\t\r\n+\r\n }\r\n"
+                },
+                {
+                    "date": 1718942379971,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,8 @@\n \r\n func main() {\r\n \tflag.Parse()\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n-\tGuildId := os.Getenv(\"GUILD\")\r\n-\tbot.Run(token, GuildID)\r\n+\tbot.Run(token,\"1017181081721639002\")\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n \r\n }\r\n"
+                },
+                {
+                    "date": 1720236303016,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,16 +1,14 @@\n package main\r\n \r\n import (\r\n-\t\"flag\"\r\n \t\"os\"\r\n \r\n \tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n func main() {\r\n-\tflag.Parse()\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n \tbot.Run(token, \"1017181081721639002\")\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n \r\n"
+                },
+                {
+                    "date": 1720236362839,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,17 @@\n package main\r\n \r\n import (\r\n+\t\"fmt\"\r\n \t\"os\"\r\n \r\n \tbot \"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot\"\r\n \tlog \"github.com/sirupsen/logrus\"\r\n )\r\n \r\n func main() {\r\n \ttoken := os.Getenv(\"TOKEN\")\r\n+\tfmt.Printf(\"token is %s\", token)\r\n \tbot.Run(token, \"1017181081721639002\")\r\n \tlog.Info(\"ShapiroHelperBot started\")\r\n \r\n }\r\n"
                 }
             ],
             "date": 1706851644694,

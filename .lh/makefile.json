@@ -1,0 +1,18 @@
+{
+    "sourceFile": "makefile",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1718652272407,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1718652272407,
+            "name": "Commit-0",
+            "content": "container_name := Ben-Bot-Go\r\n\r\nbuild:\r\n\tdocker build -t [container_name]\r\n\r\nrun:\r\n\tdocker run --name ${container_name} -p 3000:3000 ${container_name}\r\n\r\nstart:\r\n\tdocker run -d --name ${container_name} -p 3000:3000 ${container_name}\r\n\r\nstop:\r\n\tdocker container stop ${container_name}"
+        }
+    ]
+}
