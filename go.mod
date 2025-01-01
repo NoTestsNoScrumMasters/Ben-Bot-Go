@@ -1,4 +1,4 @@
-module github.com/FriendlyTornado/Ben-Bot-Go
+module github.com/NoTestsNoScrumasters/Ben-Bot-Go
 
 go 1.19
 

@@ -1,9 +1,10 @@
-package main
+package bot
 
 import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -11,9 +12,9 @@ import (
 
 // Replace with your own channel ID or forum channel ID.
 // If using a forum, you may need to iterate over thread IDs instead.
-const channelID = "123456789012345678"
+const channelID = "1017265769102450748"
 
-func Run(token string, guild string) {
+func Run(token string) {
 
 	if token == "" {
 		log.Fatal("Please set your DISCORD_BOT_TOKEN environment variable.")
@@ -52,11 +53,10 @@ func Run(token string, guild string) {
 }
 
 // registerSlashCommands creates (and overwrites) the /randomimage command in your guild (or globally).
-// * If you want to register globally, remove GuildID and just use s.ApplicationCommandCreate.
 func registerSlashCommands(s *discordgo.Session) {
 	_, err := s.ApplicationCommandCreate(
 		s.State.User.ID,
-		"", // If empty, it registers globally. Otherwise, put a specific Guild ID to limit scope.
+		os.Getenv("GUILD"), // If empty, it registers globally. Otherwise, put a specific Guild ID to limit scope.
 		&discordgo.ApplicationCommand{
 			Name:        "randomimage",
 			Description: "Returns a random image from a designated channel.",
@@ -64,6 +64,7 @@ func registerSlashCommands(s *discordgo.Session) {
 	)
 	if err != nil {
 		log.Printf("Cannot create slash command: %v\n", err)
+
 	}
 }
 

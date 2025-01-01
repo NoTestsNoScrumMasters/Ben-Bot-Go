@@ -1,2 +1,9 @@
 .env
 .env-secrets.txt
+id_benbot
+id_benbot.pub
+aws-test-definition.json
+docker-compose.yml
+.gitignore
+Dockerfile
+Dockerfile.dev
