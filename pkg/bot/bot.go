@@ -1,203 +1,138 @@
-package bot
+package main
 
 import (
+	"fmt"
 	"log"
-	"os"
-	"os/signal"
+	"math/rand"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-var s *discordgo.Session
+// Replace with your own channel ID or forum channel ID.
+// If using a forum, you may need to iterate over thread IDs instead.
+const channelID = "123456789012345678"
 
-func main() {
-	BotToken := os.Getenv("TOKEN")
-	GuildID := os.Getenv("GUILD_ID")
+func Run(token string, guild string) {
 
-	Run(BotToken, GuildID)
+	if token == "" {
+		log.Fatal("Please set your DISCORD_BOT_TOKEN environment variable.")
+	}
+
+	// Create a new Discord session.
+	dg, err := discordgo.New("Bot " + token)
+	if err != nil {
+		log.Fatalf("Error creating Discord session: %v\n", err)
+	}
+
+	// Open the WebSocket and begin listening.
+	err = dg.Open()
+	if err != nil {
+		log.Fatalf("Error opening Discord session: %v\n", err)
+	}
+	defer dg.Close()
+
+	log.Println("Bot is now running. Press CTRL-C to exit.")
+
+	// Register the slash command during startup (optional: you can register once, or whenever you start up).
+	registerSlashCommands(dg)
+
+	// Add a handler for interaction events (slash commands).
+	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if i.Type == discordgo.InteractionApplicationCommand {
+			switch i.ApplicationCommandData().Name {
+			case "randomimage":
+				handleRandomImage(s, i)
+			}
+		}
+	})
+
+	// Keep the program running until CTRL-C or an error occurs.
+	select {}
 }
 
-func Run(BotToken string, GuildID string) {
-	var (
-		botCommands = []*discordgo.ApplicationCommand{
-			{
-				Name:        "help",
-				Description: "haha, you're lost.",
-			},
-			{
-				Name:        "channels",
-				Description: "List text channels and their threads",
-			},
-			{
-				Name:        "forums",
-				Description: "Channels, but with attention spans and interests.",
-			},
-			{
-				Name:        "voice",
-				Description: "Voice channels for screeching",
-			},
-		}
-
-		commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-			"help": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-				embed := &discordgo.MessageEmbed{
-					Title:       "Help",
-					Description: "You probably need it tbh:",
-					Color:       0xFFD700, // Gold
-					Fields: []*discordgo.MessageEmbedField{
-						{Name: "/channels", Value: "List current server text channels and their threads.", Inline: false},
-						{Name: "/forums", Value: "List forums and their posts.", Inline: false},
-						{Name: "/voice", Value: "List current server voice channels.", Inline: false},
-					},
-				}
-				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{embed},
-					},
-				})
-				if err != nil {
-					log.Printf("Error responding to help command: %v", err)
-				}
-			},
-			"channels": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-				embed := &discordgo.MessageEmbed{
-					Title:       "Channels",
-					Description: "Listing text channels and their threads:",
-					Color:       0x00FF00, // Green
-				}
-				guild, err := s.State.Guild(i.GuildID)
-				if err != nil {
-					log.Printf("Error fetching guild: %v", err)
-					return
-				}
-				for _, channel := range guild.Channels {
-					if channel.Type == discordgo.ChannelTypeGuildText {
-						embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-							Name:   channel.Name,
-							Value:  channel.Mention(),
-							Inline: false,
-						})
-						activeThreads, err := s.ChannelThreadsActive(channel.ID)
-						if err == nil {
-							for _, thread := range activeThreads.Threads {
-								embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-									Name:   "Thread: " + thread.Name,
-									Value:  thread.Mention(),
-									Inline: true,
-								})
-							}
-						} else {
-							log.Printf("Error fetching active threads for channel %v: %v", channel.Name, err)
-						}
-					}
-				}
-
-				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{embed},
-					},
-				})
-				if err != nil {
-					log.Printf("Error responding to channels command: %v", err)
-				}
-			},
-			"forums": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-				embed := &discordgo.MessageEmbed{
-					Title:       "Forums",
-					Description: "Message board style channels:",
-					Color:       0x00FF00, // Green
-				}
-				guild, err := s.State.Guild(i.GuildID)
-				if err != nil {
-					log.Printf("Error fetching guild: %v", err)
-					return
-				}
-				for _, channel := range guild.Channels {
-					if channel.Type == discordgo.ChannelTypeGuildForum {
-						embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-							Name:   channel.Name,
-							Value:  channel.Mention(),
-							Inline: false,
-						})
-					}
-				}
-				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{embed},
-					},
-				})
-				if err != nil {
-					log.Printf("Error responding to forums command: %v", err)
-				}
-			},
-			"voice": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-				embed := &discordgo.MessageEmbed{
-					Title:       "Voice Channels",
-					Description: "Voice channels where collectivist chants are sung in perfect harmony:",
-					Color:       0x00FF00, // Green
-				}
-				guild, err := s.State.Guild(i.GuildID)
-				if err != nil {
-					log.Printf("Error fetching guild: %v", err)
-					return
-				}
-				for _, channel := range guild.Channels {
-					if channel.Type == discordgo.ChannelTypeGuildVoice {
-						embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-							Name:   channel.Name,
-							Value:  channel.Mention(),
-							Inline: false,
-						})
-					}
-				}
-				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{embed},
-					},
-				})
-				if err != nil {
-					log.Printf("Error responding to voice command: %v", err)
-				}
-			},
-		}
+// registerSlashCommands creates (and overwrites) the /randomimage command in your guild (or globally).
+// * If you want to register globally, remove GuildID and just use s.ApplicationCommandCreate.
+func registerSlashCommands(s *discordgo.Session) {
+	_, err := s.ApplicationCommandCreate(
+		s.State.User.ID,
+		"", // If empty, it registers globally. Otherwise, put a specific Guild ID to limit scope.
+		&discordgo.ApplicationCommand{
+			Name:        "randomimage",
+			Description: "Returns a random image from a designated channel.",
+		},
 	)
-
-	var err error
-	s, err = discordgo.New("Bot " + BotToken)
 	if err != nil {
-		log.Fatalf("Invalid bot parameters: %v", err)
+		log.Printf("Cannot create slash command: %v\n", err)
 	}
+}
 
-	s.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			h(s, i)
-		}
-	})
-	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		log.Printf("Logged in as: %v#%v", s.State.User.Username, s.State.User.Discriminator)
-	})
-
-	err = s.Open()
+// handleRandomImage fetches recent messages from a specified channel, filters out image attachments,
+// selects one at random, and sends it back in the slash command response.
+func handleRandomImage(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	imageURL, err := getRandomImageURL(s, channelID)
 	if err != nil {
-		log.Fatalf("Cannot open the session: %v", err)
+		log.Printf("Error getting random image: %v", err)
+		respondWithMessage(s, i, "Failed to find an image. Please try again or add some images!")
+		return
 	}
-	defer s.Close()
 
-	log.Println("Adding commands...")
-	log.Printf("User %s", s.State.User.Username)
-	for _, v := range botCommands {
-		_, err := s.ApplicationCommandCreate(s.State.User.ID, GuildID, v)
-		if err != nil {
-			log.Panicf("Cannot create '%v' command: %v", v.Name, err)
+	respondWithMessage(s, i, fmt.Sprintf("Here is your random image:\n%s", imageURL))
+}
+
+// getRandomImageURL fetches messages in the channel, grabs attachments that are likely images, and picks one at random.
+func getRandomImageURL(s *discordgo.Session, channelID string) (string, error) {
+	// Fetch the most recent 100 messages (max allowed by Discord in one request).
+	messages, err := s.ChannelMessages(channelID, 100, "", "", "")
+	if err != nil {
+		return "", fmt.Errorf("could not retrieve messages: %w", err)
+	}
+
+	var imageURLs []string
+	for _, msg := range messages {
+		// Check for attachments
+		for _, attachment := range msg.Attachments {
+			// You could also check the content type or extension here for more robust filtering.
+			if isImageAttachment(attachment) {
+				imageURLs = append(imageURLs, attachment.URL)
+			}
+		}
+
+		// Optionally, if you want to include image links from message embeds:
+		for _, embed := range msg.Embeds {
+			if embed.Type == discordgo.EmbedTypeImage && embed.URL != "" {
+				imageURLs = append(imageURLs, embed.URL)
+			} else if embed.Image != nil && embed.Image.URL != "" {
+				imageURLs = append(imageURLs, embed.Image.URL)
+			}
 		}
 	}
 
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt)
-	log.Println("Press Ctrl+C to exit")
-	<-stop
+	if len(imageURLs) == 0 {
+		return "", fmt.Errorf("no image attachments found in channel")
+	}
+
+	// Pick a random image from the slice
+	rand.Seed(time.Now().UnixNano())
+	randomIndex := rand.Intn(len(imageURLs))
+	return imageURLs[randomIndex], nil
+}
+
+// isImageAttachment is a basic check; you may want to refine this further.
+func isImageAttachment(attachment *discordgo.MessageAttachment) bool {
+	// Check file extension or ContentType if available.
+	return attachment.Width > 0 && attachment.Height > 0
+}
+
+// respondWithMessage is a helper function to send a response to a slash command.
+func respondWithMessage(s *discordgo.Session, i *discordgo.InteractionCreate, content string) {
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: content,
+		},
+	})
+	if err != nil {
+		log.Printf("Error responding to interaction: %v", err)
+	}
 }

@@ -1,10 +1,10 @@
-module github.com/NoTestsNoScrumMasters/Ben-Bot-Go
+module github.com/FriendlyTornado/Ben-Bot-Go
 
 go 1.19
 
 require (
-	github.com/bwmarrin/discordgo v0.27.1
-	github.com/joho/godotenv v1.3.0
+	github.com/bwmarrin/discordgo v0.28.1
+	github.com/joho/godotenv v1.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
 )

@@ -4,8 +4,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-
-	"github.com/NoTestsNoScrumMasters/Ben-Bot-Go/pkg/bot"
 	log "github.com/sirupsen/logrus"
 )
 
