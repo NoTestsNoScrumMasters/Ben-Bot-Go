@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: ../../main.go
+        run: https://github.com/NoTestsNoScrumMasters/Ben-Bot-Go/blob/master/main.go
