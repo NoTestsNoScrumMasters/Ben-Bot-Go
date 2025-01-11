@@ -5,7 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
-	bot "https://github.com/NoTestsNoScrumMasters/Ben-Bot-Go/tree/master/pkg/bot"
+	bot "github.com/NoTestsNoScrumMasters/Ben-Bot-Go/tree/master/pkg/bot"
 )
 
 func main() {
