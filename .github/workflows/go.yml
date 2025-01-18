@@ -28,6 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         go get .
+        go get github.com/NoTestsNoScrumasters/Ben-Bot-Go/pkg/bot
 
     - name: Build
       run: go build -v .
