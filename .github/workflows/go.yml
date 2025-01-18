@@ -30,7 +30,8 @@ jobs:
         go get .
 
     - name: Build
-      run: go build -v ./...
+      run: go build -v ./cmd/main
+
 
     - name: Test
       run: go test -v ./...
