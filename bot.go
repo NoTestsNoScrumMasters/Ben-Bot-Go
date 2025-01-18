@@ -5,6 +5,8 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -48,6 +50,15 @@ func Run(token string) {
 		}
 	})
 
+	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if i.Type == discordgo.InteractionApplicationCommand {
+			switch i.ApplicationCommandData().Name {
+			case "ftoc":
+				ftoc(s, i)
+			}
+		}
+	})
+
 	// Keep the program running until CTRL-C or an error occurs.
 	select {}
 }
@@ -66,6 +77,19 @@ func registerSlashCommands(s *discordgo.Session) {
 		log.Printf("Cannot create slash command: %v\n", err)
 
 	}
+
+	_, err2 := s.ApplicationCommandCreate(
+		s.State.User.ID,
+		os.Getenv("GUILD"), // If empty, it registers globally. Otherwise, put a specific Guild ID to limit scope.
+		&discordgo.ApplicationCommand{
+			Name:        "ftoc",
+			Description: "Converts from fahrenheit to celsius",
+		},
+	)
+	if err2 != nil {
+		log.Printf("Cannot create slash command: %v\n", err)
+
+	}
 }
 
 // handleRandomImage fetches recent messages from a specified channel, filters out image attachments,
@@ -79,6 +103,17 @@ func handleRandomImage(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	respondWithMessage(s, i, fmt.Sprintf("Here is your random image:\n%s", imageURL))
+}
+
+func ftoc(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	result, err := ftocConvert(s, channelID)
+	if err != nil {
+		log.Printf("Error converting temperature: %v", err)
+		respondWithMessage(s, i, "Failed to find a valid Fahrenheit value. Please try again!")
+		return
+	}
+
+	respondWithMessage(s, i, fmt.Sprintf("Here is your converted temperature:\n%s", result))
 }
 
 // getRandomImageURL fetches messages in the channel, grabs attachments that are likely images, and picks one at random.
@@ -123,6 +158,74 @@ func getRandomImageURL(s *discordgo.Session, channelID string) (string, error) {
 func isImageAttachment(attachment *discordgo.MessageAttachment) bool {
 	// Check file extension or ContentType if available.
 	return attachment.Width > 0 && attachment.Height > 0
+}
+
+func ftocConvert(s *discordgo.Session, channelID string) (string, error) {
+	// Fetch the most recent 100 messages.
+	messages, err := s.ChannelMessages(channelID, 100, "", "", "")
+	if err != nil {
+		return "", fmt.Errorf("could not retrieve messages: %w", err)
+	}
+
+	// Iterate from newest (index 0) to oldest (index len-1), or reverse if you prefer.
+	// We'll look for the first message that can be parsed as a float (Fahrenheit).
+	for i := 0; i < len(messages); i++ {
+		msg := messages[i]
+
+		// Attempt to parse the entire message content as a float.
+		// Adjust your parsing logic if you want to handle text like "My temp is 75".
+		val, parseErr := strconv.ParseFloat(strings.TrimSpace(msg.Content), 64)
+		if parseErr == nil {
+			// We found a valid Fahrenheit value.
+			celsius := (val - 32) * 5.0 / 9.0
+			result := fmt.Sprintf("%.2f°F is %.2f°C", val, celsius)
+
+			// Send the conversion result back to the channel.
+			_, sendErr := s.ChannelMessageSend(channelID, result)
+			if sendErr != nil {
+				return "", fmt.Errorf("could not send message: %w", sendErr)
+			}
+
+			// Return the final string and no error.
+			return result, nil
+		}
+	}
+
+	// If we reach here, we didn't find any valid Fahrenheit values in the last 100 messages.
+	return "", fmt.Errorf("no valid Fahrenheit value found in the last 100 messages")
+}
+
+func ctofConvert(s *discordgo.Session, channelID string) (string, error) {
+	// Fetch the most recent 100 messages.
+	messages, err := s.ChannelMessages(channelID, 100, "", "", "")
+	if err != nil {
+		return "", fmt.Errorf("could not retrieve messages: %w", err)
+	}
+
+	// Iterate from newest (index 0) to oldest (index len-1).
+	for i := 0; i < len(messages); i++ {
+		msg := messages[i]
+
+		// Attempt to parse the entire message content as a float (Celsius).
+		val, parseErr := strconv.ParseFloat(strings.TrimSpace(msg.Content), 64)
+		if parseErr == nil {
+			// We found a valid Celsius value.
+			fahrenheit := (val * 9.0 / 5.0) + 32.0
+			result := fmt.Sprintf("%.2f°C is %.2f°F", val, fahrenheit)
+
+			// Send the conversion result back to the channel.
+			_, sendErr := s.ChannelMessageSend(channelID, result)
+			if sendErr != nil {
+				return "", fmt.Errorf("could not send message: %w", sendErr)
+			}
+
+			// Return the final string and no error.
+			return result, nil
+		}
+	}
+
+	// If we reach here, we didn't find any valid Celsius values in the last 100 messages.
+	return "", fmt.Errorf("no valid Celsius value found in the last 100 messages")
 }
 
 // respondWithMessage is a helper function to send a response to a slash command.
