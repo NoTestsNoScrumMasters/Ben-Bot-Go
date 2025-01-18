@@ -1,0 +1,38 @@
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+        submodules-recursive: true
+
+    - name: Update submodules
+      run: git submodule update --init --recursive
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+
+    - name: Install dependencies
+      run: |
+        go get .
+        go get github.com/NoTestsNoScrumasters/Ben-Bot-Go/pkg/bot
+
+    - name: Build
+      run: go build -v .
+
+
+    - name: Test
+      run: go test -v ./...
