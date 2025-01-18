@@ -59,6 +59,15 @@ func Run(token string) {
 		}
 	})
 
+	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if i.Type == discordgo.InteractionApplicationCommand {
+			switch i.ApplicationCommandData().Name {
+			case "ctof":
+				ctof(s, i)
+			}
+		}
+	})
+
 	// Keep the program running until CTRL-C or an error occurs.
 	select {}
 }
@@ -87,7 +96,20 @@ func registerSlashCommands(s *discordgo.Session) {
 		},
 	)
 	if err2 != nil {
-		log.Printf("Cannot create slash command: %v\n", err)
+		log.Printf("Cannot create slash command: %v\n", err2)
+
+	}
+
+	_, err3 := s.ApplicationCommandCreate(
+		s.State.User.ID,
+		os.Getenv("GUILD"), // If empty, it registers globally. Otherwise, put a specific Guild ID to limit scope.
+		&discordgo.ApplicationCommand{
+			Name:        "ctof",
+			Description: "Converts from fahrenheit to celsius",
+		},
+	)
+	if err3 != nil {
+		log.Printf("Cannot create slash command: %v\n", err3)
 
 	}
 }
@@ -107,6 +129,17 @@ func handleRandomImage(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 func ftoc(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	result, err := ftocConvert(s, channelID)
+	if err != nil {
+		log.Printf("Error converting temperature: %v", err)
+		respondWithMessage(s, i, "Failed to find a valid Fahrenheit value. Please try again!")
+		return
+	}
+
+	respondWithMessage(s, i, fmt.Sprintf("Here is your converted temperature:\n%s", result))
+}
+
+func ctof(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	result, err := ctofConvert(s, channelID)
 	if err != nil {
 		log.Printf("Error converting temperature: %v", err)
 		respondWithMessage(s, i, "Failed to find a valid Fahrenheit value. Please try again!")
@@ -194,22 +227,21 @@ func ftocConvert(s *discordgo.Session, channelID string) (string, error) {
 	// If we reach here, we didn't find any valid Fahrenheit values in the last 100 messages.
 	return "", fmt.Errorf("no valid Fahrenheit value found in the last 100 messages")
 }
-
 func ctofConvert(s *discordgo.Session, channelID string) (string, error) {
-	// Fetch the most recent 100 messages.
+	// Fetch the most recent 100 messages in the channel.
 	messages, err := s.ChannelMessages(channelID, 100, "", "", "")
 	if err != nil {
 		return "", fmt.Errorf("could not retrieve messages: %w", err)
 	}
 
-	// Iterate from newest (index 0) to oldest (index len-1).
+	// Iterate from the newest (index 0) to the oldest (index len-1).
 	for i := 0; i < len(messages); i++ {
 		msg := messages[i]
 
-		// Attempt to parse the entire message content as a float (Celsius).
+		// Attempt to parse the entire message content as a float (representing Celsius).
 		val, parseErr := strconv.ParseFloat(strings.TrimSpace(msg.Content), 64)
 		if parseErr == nil {
-			// We found a valid Celsius value.
+			// We found a valid Celsius value in the message.
 			fahrenheit := (val * 9.0 / 5.0) + 32.0
 			result := fmt.Sprintf("%.2f°C is %.2f°F", val, fahrenheit)
 
@@ -224,8 +256,8 @@ func ctofConvert(s *discordgo.Session, channelID string) (string, error) {
 		}
 	}
 
-	// If we reach here, we didn't find any valid Celsius values in the last 100 messages.
-	return "", fmt.Errorf("no valid Celsius value found in the last 100 messages")
+	// If no valid Celsius values were found in the last 100 messages, return an error.
+	return "", fmt.Errorf("no valid Celsius values found in the last 100 messages")
 }
 
 // respondWithMessage is a helper function to send a response to a slash command.
