@@ -3,17 +3,20 @@ package main
 import (
 	"os"
 
-	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	token := os.Getenv("TOKEN")
+	if token == "" {
+		log.Fatal("TOKEN environment variable not set. Make sure it’s defined in GitHub Actions (env or secrets).")
+	}
+
+	guild := os.Getenv("GUILD")
+	if guild == "" {
+		log.Println("GUILD environment variable not set. Using default or skipping if not required.")
+	}
 	Run(token)
 	log.Info("ShapiroHelperBot started")
 
