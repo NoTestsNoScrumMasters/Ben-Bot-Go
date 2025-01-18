@@ -7,3 +7,4 @@ docker-compose.yml
 .gitignore
 Dockerfile
 Dockerfile.dev
+benbot.pem

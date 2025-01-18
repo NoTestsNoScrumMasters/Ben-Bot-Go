@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/NoTestsNoScrumasters/Ben-Bot-Go/pkg/bot"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -15,7 +14,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 	token := os.Getenv("TOKEN")
-	bot.Run(token)
+	Run(token)
 	log.Info("ShapiroHelperBot started")
 
 }
